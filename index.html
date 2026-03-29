@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroForg | Simple Website Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme fixed-layout">
+    <div class="bg-3d"></div>
+    <div id="app">
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <div class="logo">
+                    <i class='bx bxs-magic-wand'></i>
+                    <span>NeuroForg</span>
+                </div>
+                <p class="nav-tagline">Design and publish from one focused workspace.</p>
+            </div>
+            <div class="nav-meta">
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    <span>Live editing</span>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <a href="intro.html" class="btn btn-secondary" title="Return to Home"><i class='bx bx-home-alt'></i></a>
+                <button id="btn-preview" class="btn btn-secondary"><i class='bx bx-show'></i> Preview</button>
+                <button id="btn-export" class="btn btn-secondary"><i class='bx bx-code-alt'></i> Code</button>
+                <button id="btn-publish" class="btn btn-primary"><i class='bx bx-cloud-upload'></i> Publish</button>
+                <button id="btn-logout" class="btn btn-secondary btn-danger-outline" onclick="window.BuilderAuth.logout()"><i class='bx bx-log-out'></i></button>
+            </div>
+        </nav>
+
+        <div class="workspace">
+            <aside class="sidebar components-panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Library</p>
+                        <h3>Components</h3>
+                    </div>
+                    <span class="panel-count">Drag & Drop</span>
+                </div>
+                <div class="components-list" id="component-library"></div>
+
+                <div class="panel-header panel-header-spaced">
+                    <div>
+                        <p class="eyebrow">Starter Packs</p>
+                        <h3>Templates</h3>
+                    </div>
+                    <span class="panel-count">6</span>
+                </div>
+                <div class="templates-list" id="template-library"></div>
+            </aside>
+
+            <main class="canvas-container">
+                <div class="canvas-toolbar">
+                    <div id="component-counter" class="status-pill" style="margin-right: 15px; background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.2); color: #38bdf8;">
+                        <i class='bx bx-objects-horizontal-left'></i> <span id="comp-count-val">0</span> Elements
+                    </div>
+                    <button class="icon-btn" id="btn-clear" title="Clear Canvas"><i class='bx bx-trash'></i> Clear</button>
+                    <button class="icon-btn" id="btn-undo" title="Undo"><i class='bx bx-undo'></i> Undo</button>
+                    <button class="icon-btn" id="btn-redo" title="Redo"><i class='bx bx-redo'></i> Redo</button>
+                    <button class="icon-btn" id="btn-theme-toggle" title="Toggle Canvas Theme"><i class='bx bx-moon'></i> Theme</button>
+                    <div class="canvas-size-selector">
+                        <button class="icon-btn active" data-size="desktop" title="Desktop"><i class='bx bx-desktop'></i></button>
+                        <button class="icon-btn" data-size="tablet" title="Tablet"><i class='bx bx-tab'></i></button>
+                        <button class="icon-btn" data-size="mobile" title="Mobile"><i class='bx bx-mobile'></i></button>
+                        <div class="size-divider"></div>
+                        <div class="custom-size-inputs">
+                            <input type="number" id="canvas-width-input" placeholder="W" title="Width">
+                            <span>×</span>
+                            <input type="number" id="canvas-height-input" placeholder="H" title="Height">
+                        </div>
+                        <button class="icon-btn" id="btn-maximize-workspace" title="Toggle Fullscreen Canvas"><i class='bx bx-fullscreen'></i> Focus</button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper">
+                    <div class="canvas-stage">
+                        <div class="stage-header">
+                            <div>
+                                <p class="eyebrow">Canvas</p>
+                                <h2>Interactive Preview</h2>
+                            </div>
+                            <div class="stage-meta">
+                                <p class="stage-note">Drop components, tweak properties, and watch the site update instantly.</p>
+                                <div class="stage-chips">
+                                    <span class="panel-count" id="device-label">Desktop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="builder-main-grid">
+                        <section class="preview-panel">
+                            <div class="subpanel-header">
+                                <div>
+                                    <p class="eyebrow">Visual Builder</p>
+                                    <h3>Canvas View</h3>
+                                </div>
+                            </div>
+                            <div class="preview-shell" id="preview-shell">
+                                <div class="canvas-nav-btns">
+                                    <button class="canvas-nav-btn" onclick="document.getElementById('preview-shell').scrollTo({top:0,behavior:'smooth'})" title="Scroll to Canvas Top"><i class='bx bx-chevron-up'></i></button>
+                                    <button class="canvas-nav-btn" onclick="document.getElementById('preview-shell').scrollTo({top:10000,behavior:'smooth'})" title="Scroll to Canvas Bottom"><i class='bx bx-chevron-down'></i></button>
+                                </div>
+                                <iframe id="canvas-iframe" src="about:blank"></iframe>
+                            </div>
+                        </section>
+
+                        <aside class="live-code-panel">
+                            <div class="subpanel-header">
+                                <div>
+                                    <p class="eyebrow">Real-Time Code</p>
+                                    <h3>Learn While You Build</h3>
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
+                                    <div class="live-code-tabs">
+                                        <button class="tab-btn active live-tab-btn" data-live-tab="html">HTML</button>
+                                        <button class="tab-btn live-tab-btn" data-live-tab="css">CSS</button>
+                                        <button class="tab-btn live-tab-btn" data-live-tab="js">JS</button>
+                                    </div>
+                                    <button id="btn-apply-manual-code" class="btn btn-primary" style="padding: 6px 14px; min-height: 0; font-size: 0.85rem; background: var(--success);"><i class='bx bx-check-double'></i> Apply Code</button>
+                                    <button id="btn-reset-code" class="btn btn-secondary" style="padding: 6px 14px; min-height: 0; font-size: 0.85rem;" title="Reset to Visual Builder State"><i class='bx bx-reset'></i> Reset</button>
+                                </div>
+                            </div>
+                            <textarea id="live-code-view" class="live-code-view" placeholder="Edit code here to update the canvas instantly..."></textarea>
+                        </aside>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="sidebar properties-panel">
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Inspector</p>
+                        <h3>Properties</h3>
+                    </div>
+                    <span class="panel-count">Edit</span>
+                </div>
+                <div id="properties-content" class="properties-content">
+                    <div class="empty-state">
+                        <i class='bx bx-pointer'></i>
+                        <p>Select an element on the canvas to customize its properties.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div id="export-modal" class="modal">
+            <div class="modal-content glass-effect">
+                <div class="modal-header">
+                    <h2><i class='bx bx-code-block'></i> Generated Code</h2>
+                    <span class="close-btn" id="close-export"><i class='bx bx-x'></i></span>
+                </div>
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="html">HTML</button>
+                    <button class="tab-btn" data-tab="css">CSS</button>
+                    <button class="tab-btn" data-tab="js">JS</button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="code-editor" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="document.getElementById('export-modal').classList.remove('active')" style="margin-right: auto;"><i class='bx bx-arrow-back'></i> Go Back</button>
+                    <button id="btn-copy" class="btn btn-secondary"><i class='bx bx-copy'></i> Copy to Clipboard</button>
+                    <button id="btn-download" class="btn btn-primary"><i class='bx bx-download'></i> Download ZIP</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="fullscreen-test-overlay" class="fullscreen-overlay">
+            <div class="fs-header">
+                <div style="display: flex; align-items: center; gap: 10px; font-weight: 600;">
+                    <span class="status-dot"></span> Simulation Mode Active
+                </div>
+                <button id="btn-exit-test" class="btn btn-danger-outline"><i class='bx bx-x'></i> Exit Test</button>
+            </div>
+            <iframe id="test-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/dragdrop.js"></script>
+    <script src="js/properties.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/theme-engine.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
